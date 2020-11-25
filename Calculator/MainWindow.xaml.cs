@@ -36,10 +36,15 @@ namespace Calculator
             new RomanToArabicTranslator(),
             new ArabicToRomanTranslator()
         };
+        Dictionary<string, ITranslator> CheckersAvailable = new Dictionary<string, ITranslator>
+        {
+            { new RomanToArabicTranslator().ToString(), new ArabicToRomanTranslator() },
+            { new ArabicToRomanTranslator().ToString(), new RomanToArabicTranslator() }
+        };
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ViewModel.ViewModel(ActionsAvailable, TranslatorsAvailable);
+            DataContext = new ViewModel.ViewModel(ActionsAvailable, TranslatorsAvailable, CheckersAvailable);
         }
     }
 }

@@ -7,7 +7,8 @@ namespace Calculator.Model
     public sealed class CalculatorModel
     {
         public IAction Action { get;  set; }
-        public ITranslator Translator { private get; set; }
+        public ITranslator Translator { get; set; }
+        public ITranslator TranslationChecker { private get; set; }
 
         public int Calculate(int[] operands)
         {
@@ -15,7 +16,12 @@ namespace Calculator.Model
         }
         public string Translate(string number)
         {
-            return Translator.Translate(number);
+            string answer = Translator.Translate(number);
+            if (number != TranslationChecker.Translate(answer))
+            {
+                throw new Exception();
+            }
+            return answer;
         }
         
     }

@@ -54,6 +54,7 @@ namespace Calculator.ViewModel
                 onPropertyChanged();
             }
         }
+        private Dictionary<string, ITranslator> checkers;
         public ITranslator[] Translators { get; set; }
         private string _calculatorOutput;
         public string CalculatorOutput
@@ -83,10 +84,11 @@ namespace Calculator.ViewModel
         public ICommand CalculateCommand { protected set; get; }
         public ICommand TranslateCommand { protected set; get; }
         public ICommand ClearCommand { protected set; get; }
-        public ViewModel(IAction[] actions, ITranslator[] translators)
+        public ViewModel(IAction[] actions, ITranslator[] translators, Dictionary<string, ITranslator> checkers)
         {
             _model = new CalculatorModel();
             Translators = translators;
+            this.checkers = checkers;
             CalculateCommand = new DelegateCommand(ExecuteCalculate);
             TranslateCommand = new DelegateCommand(ExecuteTranslate);
             ClearCommand = new DelegateCommand(ExecuteClear);
@@ -97,6 +99,8 @@ namespace Calculator.ViewModel
         private void ExecuteTranslate(object param)
         {
             _model.Translator = (ITranslator)param;
+            _model.TranslationChecker = checkers[((ITranslator)param).ToString()];
+
             try
             {
                 TranslatorOutput = _model.Translate(TranslatorInput);
