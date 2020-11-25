@@ -9,9 +9,11 @@ namespace Calculator.Model.Actions
         public int Calculate(int[] operands)
         {
             int _product = 1;
-            foreach(int multiplier in operands)
-            {
-                _product *= multiplier;
+            checked {
+                foreach (int multiplier in operands)
+                {
+                    _product *= multiplier;
+                }
             }
             return _product;
         }

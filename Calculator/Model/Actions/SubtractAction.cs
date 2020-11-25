@@ -8,7 +8,12 @@ namespace Calculator.Model.Actions
     {
         public int Calculate(int[] operands)
         {
-            return operands[0] - operands[1];
+            int answer;
+            checked
+            {
+                answer = operands[0] - operands[1];
+            }
+            return answer;
         }
         public override string ToString()
         {

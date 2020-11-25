@@ -8,10 +8,14 @@ namespace Calculator.Model.Actions
     {
         public int Calculate(int[] operands)
         {
+
             int _sum = 0;
-            foreach(int summand in operands)
+            checked
             {
-                _sum += summand;
+                foreach (int summand in operands)
+                {
+                    _sum += summand;
+                }
             }
             return _sum;
         }
