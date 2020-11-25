@@ -15,5 +15,9 @@ namespace Calculator.Model.Actions
             }
             return _product;
         }
+        public override string ToString()
+        {
+            return "*";
+        }
     }
 }

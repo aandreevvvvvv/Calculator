@@ -6,7 +6,7 @@ namespace Calculator.Model
 {
     public sealed class CalculatorModel
     {
-        public IAction Action { private get;  set; }
+        public IAction Action { get;  set; }
         public ITranslator Translator { private get; set; }
 
         public int Calculate(int[] operands)
