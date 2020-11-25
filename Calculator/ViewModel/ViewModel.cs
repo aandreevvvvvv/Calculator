@@ -83,7 +83,8 @@ namespace Calculator.ViewModel
         }
         public ICommand CalculateCommand { protected set; get; }
         public ICommand TranslateCommand { protected set; get; }
-        public ICommand ClearCommand { protected set; get; }
+        public ICommand ClearCalculateCommand { protected set; get; }
+        public ICommand ClearTranslateCommand { protected set; get; }
         public ViewModel(IAction[] actions, ITranslator[] translators, Dictionary<string, ITranslator> checkers)
         {
             _model = new CalculatorModel();
@@ -91,7 +92,8 @@ namespace Calculator.ViewModel
             this.checkers = checkers;
             CalculateCommand = new DelegateCommand(ExecuteCalculate);
             TranslateCommand = new DelegateCommand(ExecuteTranslate);
-            ClearCommand = new DelegateCommand(ExecuteClear);
+            ClearCalculateCommand = new DelegateCommand(ExecuteClearCalculate);
+            ClearTranslateCommand = new DelegateCommand(ExecuteClearTranslate);
             Actions = new ActionsCollection(actions);
             CalculatorInput = new string[2];
             TranslatorChosen = new bool[Translators.Length];
@@ -100,6 +102,11 @@ namespace Calculator.ViewModel
         {
             _model.Translator = (ITranslator)param;
             _model.TranslationChecker = checkers[((ITranslator)param).ToString()];
+            if(TranslatorInput == null)
+            {
+                TranslatorOutput = "Неправильный ввод";
+                return;
+            }
 
             try
             {
@@ -121,16 +128,18 @@ namespace Calculator.ViewModel
                 CalculatorOutput = "Неправильный ввод";
             }
         }
-        private void ExecuteClear(object param)
+        private void ExecuteClearCalculate(object param)
         {
             CalculatorInput = new string[2];
-            TranslatorChosen = new bool[Translators.Length];
             CalculatorOutput = "";
-            TranslatorInput = "";
-            TranslatorOutput = "";
             CurrentAction = null;
         }
-
+        private void ExecuteClearTranslate(object param)
+        {
+            TranslatorInput = "";
+            TranslatorOutput = "";
+            TranslatorChosen = new bool[Translators.Length];
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         
         public void onPropertyChanged([CallerMemberName]string prop="")
