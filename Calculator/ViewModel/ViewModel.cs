@@ -97,11 +97,25 @@ namespace Calculator.ViewModel
         private void ExecuteTranslate(object param)
         {
             _model.Translator = (ITranslator)param;
-            TranslatorOutput = _model.Translate(TranslatorInput);
+            try
+            {
+                TranslatorOutput = _model.Translate(TranslatorInput);
+            }
+            catch
+            {
+                TranslatorOutput = "Неправильный ввод";
+            }
         }
         private void ExecuteCalculate(object param)
         {
-            CalculatorOutput = (_model.Calculate(Array.ConvertAll(CalculatorInput, int.Parse))).ToString();
+            try
+            {
+                CalculatorOutput = (_model.Calculate(Array.ConvertAll(CalculatorInput, int.Parse))).ToString();
+            }
+            catch
+            {
+                CalculatorOutput = "Неправильный ввод";
+            }
         }
         private void ExecuteClear(object param)
         {
