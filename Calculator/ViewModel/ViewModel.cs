@@ -14,16 +14,54 @@ namespace Calculator.ViewModel
     public class ViewModel : INotifyPropertyChanged
     {
         private CalculatorModel _model;
-        public string[] Input { get; set; }
-        public string TranslatorInput { get; set; }
-        public string TranslatorOutput { get; set; }
-        private string _output;
-        public string Output
+        private string[] _calculatorInput;
+        public string[] CalculatorInput
         {
-            get { return _output; }
+            get { return _calculatorInput;  }
             set
             {
-                _output = value;
+                _calculatorInput = value;
+                onPropertyChanged();
+            }
+        }
+        private string _translatorInput;
+        public string TranslatorInput
+        {
+            get { return _translatorInput; }
+            set
+            {
+                _translatorInput = value;
+                onPropertyChanged();
+            }
+        }
+        private string _translatorOutput;
+        public string TranslatorOutput
+        {
+            get { return _translatorOutput; }
+            set
+            {
+                _translatorOutput = value;
+                onPropertyChanged();
+            }
+        }
+        private bool[] _translatorChosen;
+        public bool[] TranslatorChosen
+        {
+            get { return _translatorChosen; }
+            set
+            {
+                _translatorChosen = value;
+                onPropertyChanged();
+            }
+        }
+        public ITranslator[] Translators { get; set; }
+        private string _calculatorOutput;
+        public string CalculatorOutput
+        {
+            get { return _calculatorOutput; }
+            set
+            {
+                _calculatorOutput = value;
                 onPropertyChanged();
             }
         }
@@ -39,20 +77,40 @@ namespace Calculator.ViewModel
             set
             {
                 _model.Action = value;
+                onPropertyChanged();
             }
         }
         public ICommand CalculateCommand { protected set; get; }
-        public ViewModel(IAction[] actions)
+        public ICommand TranslateCommand { protected set; get; }
+        public ICommand ClearCommand { protected set; get; }
+        public ViewModel(IAction[] actions, ITranslator[] translators)
         {
             _model = new CalculatorModel();
+            Translators = translators;
             CalculateCommand = new DelegateCommand(ExecuteCalculate);
+            TranslateCommand = new DelegateCommand(ExecuteTranslate);
+            ClearCommand = new DelegateCommand(ExecuteClear);
             Actions = new ActionsCollection(actions);
-            Input = new string[2];
+            CalculatorInput = new string[2];
+            TranslatorChosen = new bool[Translators.Length];
         }
-        
+        private void ExecuteTranslate(object param)
+        {
+            _model.Translator = (ITranslator)param;
+            TranslatorOutput = _model.Translate(TranslatorInput);
+        }
         private void ExecuteCalculate(object param)
         {
-            Output = (_model.Calculate(Array.ConvertAll(Input, int.Parse))).ToString();
+            CalculatorOutput = (_model.Calculate(Array.ConvertAll(CalculatorInput, int.Parse))).ToString();
+        }
+        private void ExecuteClear(object param)
+        {
+            CalculatorInput = new string[2];
+            TranslatorChosen = new bool[Translators.Length];
+            CalculatorOutput = "";
+            TranslatorInput = "";
+            TranslatorOutput = "";
+            CurrentAction = null;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

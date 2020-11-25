@@ -32,5 +32,9 @@ namespace Calculator.Model.Translators
             answer += _symbols[number[number.Length - 1]];
             return answer.ToString();
         }
+        public override string ToString()
+        {
+            return "Римские в арабские";
+        }
     }
 }

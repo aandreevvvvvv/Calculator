@@ -72,6 +72,10 @@ namespace Calculator.Model.Translators
             }
             return answer;
         }
+        public override string ToString()
+        {
+            return "Арабские в римские";
+        }
     }
 }
     

@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Calculator.Model;
 using Calculator.Model.Actions;
+using Calculator.Model.Translators;
 
 namespace Calculator
 {
@@ -30,10 +31,15 @@ namespace Calculator
             new DivideAction(),
             new ModAction()
         };
+        ITranslator[] TranslatorsAvailable = new ITranslator[]
+        {
+            new RomanToArabicTranslator(),
+            new ArabicToRomanTranslator()
+        };
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ViewModel.ViewModel(ActionsAvailable);
+            DataContext = new ViewModel.ViewModel(ActionsAvailable, TranslatorsAvailable);
         }
     }
 }
