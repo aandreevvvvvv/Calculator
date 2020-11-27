@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Calculator.Model;
 using System.Collections.ObjectModel;
 using Calculator.Model.Actions;
+using Calculator.Model.Translators;
 using System.Collections;
 
 namespace Calculator.ViewModel

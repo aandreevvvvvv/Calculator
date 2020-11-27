@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Calculator.Model
+namespace Calculator.Model.Translators
 {
     public interface ITranslator
     {

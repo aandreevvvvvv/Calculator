@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Calculator.Model.Translators;
+using Calculator.Model.Actions;
 
 namespace Calculator.Model
 {
