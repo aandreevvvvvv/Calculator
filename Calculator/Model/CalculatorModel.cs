@@ -8,9 +8,9 @@ namespace Calculator.Model
 {
     public sealed class CalculatorModel
     {
-        public IAction Action { get;  set; }
-        public ITranslator Translator { get; set; }
-        public ITranslator TranslationChecker { private get; set; }
+        public IAction Action { get; set; } = null;
+        public ITranslator Translator { get; set; } = null;
+        public ITranslator TranslationChecker { private get; set; } = null;
 
         public int Calculate(int[] operands)
         {

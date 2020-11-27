@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Calculator.Model;
 using Calculator.Model.Actions;
 using Calculator.Model.Translators;
+using Calculator.Model.Loggers;
 
 namespace Calculator
 {
@@ -44,7 +45,7 @@ namespace Calculator
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ViewModel.ViewModel(ActionsAvailable, TranslatorsAvailable, CheckersAvailable);
+            DataContext = new ViewModel.ViewModel(ActionsAvailable, TranslatorsAvailable, CheckersAvailable, new FileLogger(Environment.GetFolderPath(Environment.SpecialFolder.Desktop)+"\\log.txt", ActionsAvailable, TranslatorsAvailable));
         }
     }
 }

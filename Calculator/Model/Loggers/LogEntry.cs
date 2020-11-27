@@ -8,12 +8,12 @@ namespace Calculator.Model.Loggers
 {
     public class LogEntry
     {
-        public string[] CalculatorInputs { get; set; }
-        public IAction Action { get; set; }
-        public string CalculatorOutput { get; set; }
-        public string TranslatorInput { get; set; }
-        public ITranslator Translator { get; set; }
-        public string TranslatorOutput { get; set; }
+        public string[] CalculatorInputs { get; set; } = new string[0];
+        public IAction Action { get; set; } = null;
+        public string CalculatorOutput { get; set; } = "";
+        public string TranslatorInput { get; set; } = "";
+        public ITranslator Translator { get; set; } = null;
+        public string TranslatorOutput { get; set; } = "";
         public LogEntry(string[] calculatorInputs, IAction action, string calculatorOuput)
         {
             CalculatorInputs = calculatorInputs;
@@ -45,10 +45,24 @@ namespace Calculator.Model.Loggers
             {
                 str += input + ";";
             }
-            str += Action.ToString() + ";";
+            if (Action == null)
+            {
+                str += ";";
+            }
+            else
+            {
+                str += Action.ToString() + ";";
+            }
             str += CalculatorOutput + ";";
             str += TranslatorInput + ";";
-            str += Translator.ToString() + ";";
+            if (Translator == null)
+            {
+                str += ";";
+            }
+            else
+            {
+                str += Translator.ToString() + ";";
+            }
             str += TranslatorOutput + ";";
             return str;
         }

@@ -10,22 +10,18 @@ namespace Calculator.Model.Loggers
     class FileLogger : ILogger
     {
         private string _path;
-        private ActionsCollection _actionsCollection;
-        private ITranslator[] _translatorsCollection;
+        private IAction[] _actionsAvailable;
+        private ITranslator[] _translatorsAvailable;
         private const int STATIC_FIELDS_LEN = 5;
-        public FileLogger(string path, ActionsCollection actionsCollection, ITranslator[] translatorsCollection)
+        public FileLogger(string path, IAction[] actionsAvailable, ITranslator[] translatorsAvailable)
         {
             _path = path;
-            _actionsCollection = actionsCollection;
-            _translatorsCollection = translatorsCollection;
+            _actionsAvailable = actionsAvailable;
+            _translatorsAvailable = translatorsAvailable;
         }
         public void Write(LogEntry entry)
         {
-            if (!File.Exists(_path))
-            {
-                File.Create(_path);
-            }
-            using(StreamWriter writer = new StreamWriter(_path))
+            using (StreamWriter writer = new StreamWriter(_path))
             {
                 writer.WriteLine(entry.ToString());
             }
@@ -36,10 +32,10 @@ namespace Calculator.Model.Loggers
             {
                 return new LogEntry();
             }
-            using(StreamReader reader = new StreamReader(_path))
+            using (StreamReader reader = new StreamReader(_path))
             {
                 string str = "";
-                for(int i=0; i<idx; ++i)
+                for (int i = 0; i < idx; ++i)
                 {
                     if ((str = reader.ReadLine()) == null)
                     {
@@ -50,17 +46,17 @@ namespace Calculator.Model.Loggers
                 string[] properties = str.Split(';');
 
                 string[] calculatorInputs = new string[properties.Length - STATIC_FIELDS_LEN];
-                for(currentProperty=0; currentProperty<calculatorInputs.Length; ++currentProperty)
+                for (currentProperty = 0; currentProperty < calculatorInputs.Length; ++currentProperty)
                 {
                     calculatorInputs[currentProperty] = properties[currentProperty];
                 }
                 currentProperty++;
                 IAction action = null;
-                foreach(IAction actionFromCollection in _actionsCollection)
+                foreach (IAction actionAvailable in _actionsAvailable)
                 {
-                    if (actionFromCollection.ToString() == properties[currentProperty])
+                    if (actionAvailable.ToString() == properties[currentProperty])
                     {
-                        action = actionFromCollection;
+                        action = actionAvailable;
                         currentProperty++;
                         break;
                     }
@@ -72,11 +68,11 @@ namespace Calculator.Model.Loggers
                 string calculatorOutput = properties[currentProperty++];
                 string translatorInput = properties[currentProperty++];
                 ITranslator translator = null;
-                foreach(ITranslator translatorFromCollection in _translatorsCollection)
+                foreach (ITranslator translatorAvailable in _translatorsAvailable)
                 {
-                    if (translatorFromCollection.ToString() == properties[currentProperty])
+                    if (translatorAvailable.ToString() == properties[currentProperty])
                     {
-                        translator = translatorFromCollection;
+                        translator = translatorAvailable;
                         currentProperty++;
                         break;
                     }
@@ -89,4 +85,5 @@ namespace Calculator.Model.Loggers
                 return new LogEntry(calculatorInputs, action, calculatorOutput, translatorInput, translator, translatorOutput);
             }
         }
+    }
 }

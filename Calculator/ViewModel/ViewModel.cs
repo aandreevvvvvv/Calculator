@@ -8,6 +8,7 @@ using Calculator.Model;
 using System.Collections.ObjectModel;
 using Calculator.Model.Actions;
 using Calculator.Model.Translators;
+using Calculator.Model.Loggers;
 using System.Collections;
 
 namespace Calculator.ViewModel
@@ -15,6 +16,7 @@ namespace Calculator.ViewModel
     public class ViewModel : INotifyPropertyChanged
     {
         private CalculatorModel _model;
+        private ILogger _logger;
         private string[] _calculatorInput;
         public string[] CalculatorInput
         {
@@ -86,7 +88,7 @@ namespace Calculator.ViewModel
         public ICommand TranslateCommand { protected set; get; }
         public ICommand ClearCalculateCommand { protected set; get; }
         public ICommand ClearTranslateCommand { protected set; get; }
-        public ViewModel(IAction[] actions, ITranslator[] translators, Dictionary<string, ITranslator> checkers)
+        public ViewModel(IAction[] actions, ITranslator[] translators, Dictionary<string, ITranslator> checkers, ILogger logger)
         {
             _model = new CalculatorModel();
             Translators = translators;
@@ -98,9 +100,14 @@ namespace Calculator.ViewModel
             Actions = new ActionsCollection(actions);
             CalculatorInput = new string[2];
             TranslatorChosen = new bool[Translators.Length];
+            _logger = logger;
         }
         private void ExecuteTranslate(object param)
         {
+            if(_model.Translator == null)
+            {
+                return;
+            }
             _model.Translator = (ITranslator)param;
             _model.TranslationChecker = checkers[((ITranslator)param).ToString()];
             if(TranslatorInput == null)
@@ -117,9 +124,11 @@ namespace Calculator.ViewModel
             {
                 TranslatorOutput = "Неправильный ввод";
             }
+            _logger.Write(new LogEntry(_translatorInput, _model.Translator, _translatorOutput));
         }
         private void ExecuteCalculate(object param)
         {
+            if (_model.Action == null) return;
             try
             {
                 CalculatorOutput = (_model.Calculate(Array.ConvertAll(CalculatorInput, int.Parse))).ToString();
@@ -128,6 +137,7 @@ namespace Calculator.ViewModel
             {
                 CalculatorOutput = "Неправильный ввод";
             }
+            _logger.Write(new LogEntry(_calculatorInput, _model.Action, _calculatorOutput));
         }
         private void ExecuteClearCalculate(object param)
         {

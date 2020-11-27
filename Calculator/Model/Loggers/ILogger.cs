@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Calculator.Model.Loggers
 {
-    interface ILogger
+    public interface ILogger
     {
         public void Write(LogEntry entry);
         public LogEntry Read(int idx);
