@@ -143,7 +143,12 @@ namespace Calculator.ViewModel
         private void ExecuteGetPrevious(object param)
         {
             LogEntry entry = _logger.Read(++_historyIdx);
-            CalculatorInput = entry.CalculatorInput;
+            string[] calculatorInput = new string[2];
+            for (int i = 0; i < entry.CalculatorInput.Length; ++i)
+            {
+                calculatorInput[i] = entry.CalculatorInput[i];
+            }
+            CalculatorInput = calculatorInput;
             CurrentAction = entry.Action;
             CalculatorOutput = entry.CalculatorOutput;
             TranslatorInput = entry.TranslatorInput;

@@ -8,7 +8,7 @@ namespace Calculator.Model.Loggers
 {
     public class LogEntry
     {
-        public string[] CalculatorInput { get; set; } = new string[2];
+        public string[] CalculatorInput { get; set; } = new string[0];
         public IAction Action { get; set; } = null;
         public string CalculatorOutput { get; set; } = "";
         public string TranslatorInput { get; set; } = "";
@@ -41,6 +41,7 @@ namespace Calculator.Model.Loggers
         public override string ToString()
         {
             string str = "";
+            str += CalculatorInput.Length + ";";
             foreach(string input in CalculatorInput)
             {
                 str += input + ";";

@@ -12,7 +12,6 @@ namespace Calculator.Model.Loggers
         private string _path;
         private IAction[] _actionsAvailable;
         private ITranslator[] _translatorsAvailable;
-        private const int STATIC_FIELDS_LEN = 6;
         public FileLogger(string path, IAction[] actionsAvailable, ITranslator[] translatorsAvailable)
         {
             _path = path;
@@ -54,11 +53,11 @@ namespace Calculator.Model.Loggers
                 }
                 int currentProperty = 0;
                 string[] properties = str.Split(';');
-
-                string[] calculatorInputs = new string[properties.Length - STATIC_FIELDS_LEN];
-                for (currentProperty = 0; currentProperty < calculatorInputs.Length; ++currentProperty)
+                int calculatorInputsCount = Convert.ToInt32(properties[currentProperty++]);
+                string[] calculatorInputs = new string[calculatorInputsCount];
+                for (int prev=currentProperty; (currentProperty-prev) < calculatorInputs.Length; ++currentProperty)
                 {
-                    calculatorInputs[currentProperty] = properties[currentProperty];
+                    calculatorInputs[currentProperty-prev] = properties[currentProperty];
                 }
                 IAction action = null;
                 foreach (IAction actionAvailable in _actionsAvailable)

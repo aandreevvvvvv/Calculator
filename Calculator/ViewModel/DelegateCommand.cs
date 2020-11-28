@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 
 namespace Calculator.ViewModel
 {
-    class DelegateCommand : IDelegateCommand
+    class DelegateCommand : ICommand
     {
         private Action<object> _execute;
 
