@@ -84,10 +84,12 @@ namespace Calculator.ViewModel
                 onPropertyChanged();
             }
         }
+        private int _historyIdx=0;
         public ICommand CalculateCommand { protected set; get; }
         public ICommand TranslateCommand { protected set; get; }
         public ICommand ClearCalculateCommand { protected set; get; }
         public ICommand ClearTranslateCommand { protected set; get; }
+        public ICommand GetPreviousCommand { protected set; get; }
         public ViewModel(IAction[] actions, ITranslator[] translators, Dictionary<string, ITranslator> checkers, ILogger logger)
         {
             _model = new CalculatorModel();
@@ -97,6 +99,7 @@ namespace Calculator.ViewModel
             TranslateCommand = new DelegateCommand(ExecuteTranslate);
             ClearCalculateCommand = new DelegateCommand(ExecuteClearCalculate);
             ClearTranslateCommand = new DelegateCommand(ExecuteClearTranslate);
+            GetPreviousCommand = new DelegateCommand(ExecuteGetPrevious);
             Actions = new ActionsCollection(actions);
             CalculatorInput = new string[2];
             TranslatorChosen = new bool[Translators.Length];
@@ -104,10 +107,7 @@ namespace Calculator.ViewModel
         }
         private void ExecuteTranslate(object param)
         {
-            if(_model.Translator == null)
-            {
-                return;
-            }
+            _historyIdx = 0;
             _model.Translator = (ITranslator)param;
             _model.TranslationChecker = checkers[((ITranslator)param).ToString()];
             if(TranslatorInput == null)
@@ -124,10 +124,11 @@ namespace Calculator.ViewModel
             {
                 TranslatorOutput = "Неправильный ввод";
             }
-            _logger.Write(new LogEntry(_translatorInput, _model.Translator, _translatorOutput));
+            _logger.Write(new LogEntry(TranslatorInput, _model.Translator, TranslatorOutput));
         }
         private void ExecuteCalculate(object param)
         {
+            _historyIdx = 0;
             if (_model.Action == null) return;
             try
             {
@@ -137,7 +138,29 @@ namespace Calculator.ViewModel
             {
                 CalculatorOutput = "Неправильный ввод";
             }
-            _logger.Write(new LogEntry(_calculatorInput, _model.Action, _calculatorOutput));
+            _logger.Write(new LogEntry(CalculatorInput, _model.Action, CalculatorOutput));
+        }
+        private void ExecuteGetPrevious(object param)
+        {
+            LogEntry entry = _logger.Read(++_historyIdx);
+            CalculatorInput = entry.CalculatorInput;
+            CurrentAction = entry.Action;
+            CalculatorOutput = entry.CalculatorOutput;
+            TranslatorInput = entry.TranslatorInput;
+            bool[] translatorChosen = new bool[Translators.Length];
+            for(int i=0; i<Translators.Length; ++i)
+            {
+                if (Translators[i] == entry.Translator)
+                {
+                    translatorChosen[i] = true;
+                }
+                else
+                {
+                    translatorChosen[i] = false;
+                }
+            }
+            TranslatorChosen = translatorChosen;
+            TranslatorOutput = entry.TranslatorOutput;
         }
         private void ExecuteClearCalculate(object param)
         {

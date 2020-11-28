@@ -8,7 +8,7 @@ namespace Calculator.Model.Loggers
 {
     public class LogEntry
     {
-        public string[] CalculatorInputs { get; set; } = new string[0];
+        public string[] CalculatorInput { get; set; } = new string[2];
         public IAction Action { get; set; } = null;
         public string CalculatorOutput { get; set; } = "";
         public string TranslatorInput { get; set; } = "";
@@ -16,7 +16,7 @@ namespace Calculator.Model.Loggers
         public string TranslatorOutput { get; set; } = "";
         public LogEntry(string[] calculatorInputs, IAction action, string calculatorOuput)
         {
-            CalculatorInputs = calculatorInputs;
+            CalculatorInput = calculatorInputs;
             Action = action;
             CalculatorOutput = calculatorOuput;
         }
@@ -24,16 +24,16 @@ namespace Calculator.Model.Loggers
         {
             TranslatorInput = translatorInput;
             Translator = translator;
-            TranslatorOutput = TranslatorOutput;
+            TranslatorOutput = translatorOutput;
         }
-        public LogEntry(string[] calculatorInputs, IAction action, string calculatorOutput, string translatorInput, ITranslator translator, string translatorOuput)
+        public LogEntry(string[] calculatorInputs, IAction action, string calculatorOutput, string translatorInput, ITranslator translator, string translatorOutput)
         {
-            CalculatorInputs = calculatorInputs;
+            CalculatorInput = calculatorInputs;
             Action = action;
             CalculatorOutput = calculatorOutput;
             TranslatorInput = translatorInput;
             Translator = translator;
-            TranslatorOutput = TranslatorOutput;
+            TranslatorOutput = translatorOutput;
         }
         public LogEntry()
         {
@@ -41,7 +41,7 @@ namespace Calculator.Model.Loggers
         public override string ToString()
         {
             string str = "";
-            foreach(string input in CalculatorInputs)
+            foreach(string input in CalculatorInput)
             {
                 str += input + ";";
             }

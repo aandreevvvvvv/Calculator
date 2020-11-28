@@ -12,7 +12,7 @@ namespace Calculator.Model.Loggers
         private string _path;
         private IAction[] _actionsAvailable;
         private ITranslator[] _translatorsAvailable;
-        private const int STATIC_FIELDS_LEN = 5;
+        private const int STATIC_FIELDS_LEN = 6;
         public FileLogger(string path, IAction[] actionsAvailable, ITranslator[] translatorsAvailable)
         {
             _path = path;
@@ -21,9 +21,15 @@ namespace Calculator.Model.Loggers
         }
         public void Write(LogEntry entry)
         {
+            if (!File.Exists(_path))
+            {
+                (File.Create(_path)).Dispose();
+            }
+            string prev = File.ReadAllText(_path);
             using (StreamWriter writer = new StreamWriter(_path))
             {
                 writer.WriteLine(entry.ToString());
+                writer.WriteLine(prev);
             }
         }
         public LogEntry Read(int idx)
@@ -42,6 +48,10 @@ namespace Calculator.Model.Loggers
                         return new LogEntry();
                     }
                 }
+                if (str == "")
+                {
+                    return new LogEntry();
+                }
                 int currentProperty = 0;
                 string[] properties = str.Split(';');
 
@@ -50,21 +60,16 @@ namespace Calculator.Model.Loggers
                 {
                     calculatorInputs[currentProperty] = properties[currentProperty];
                 }
-                currentProperty++;
                 IAction action = null;
                 foreach (IAction actionAvailable in _actionsAvailable)
                 {
                     if (actionAvailable.ToString() == properties[currentProperty])
                     {
                         action = actionAvailable;
-                        currentProperty++;
                         break;
                     }
                 }
-                if (action == null)
-                {
-                    return new LogEntry();
-                }
+                currentProperty++;
                 string calculatorOutput = properties[currentProperty++];
                 string translatorInput = properties[currentProperty++];
                 ITranslator translator = null;
@@ -73,14 +78,10 @@ namespace Calculator.Model.Loggers
                     if (translatorAvailable.ToString() == properties[currentProperty])
                     {
                         translator = translatorAvailable;
-                        currentProperty++;
                         break;
                     }
                 }
-                if (translator == null)
-                {
-                    return new LogEntry();
-                }
+                currentProperty++;
                 string translatorOutput = properties[currentProperty++];
                 return new LogEntry(calculatorInputs, action, calculatorOutput, translatorInput, translator, translatorOutput);
             }
